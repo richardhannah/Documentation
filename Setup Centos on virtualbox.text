@@ -1,0 +1,195 @@
+Setting up centos on virtualbox {#setting-up-centos-on-virtualbox .western lang="zxx"}
+===============================
+
+\
+\
+
+Prerequisites – install virtualbox
+
+1.  Download minimal ISO from <https://www.centos.org/download/>
+
+2.  Create new VM on virtualbox – use redhat template – default options
+    and 20GB diskspace are fine
+
+3.  Start vm and select downloaded centos ISO as boot media – install
+    centos
+
+-   Installation destination – just select the harddisk and ensure
+    automatically configure partitioning is selected
+
+-   Network and hostname – ensure ethernet is switched on
+    (usually enp0s3)
+
+-   set root and user passwords (make user administrator)
+
+\
+\
+
+4.  login as user
+
+5.  run visudo – find the lines where it says
+
+    Allows people in group wheel to run all commands –
+    ensure uncommented. Optional – also uncomment the line below – where
+    it says "Same thing without a password". This will allow sudo
+    command to run without needing a password.
+
+6.  Shutdown vm and go to settings-&gt;network
+
+7.  enable adapter 2 and select host-only adapter – expand advanced and
+    take note of mac address – restart vm
+
+8.  login and run ip addr – note that a second ethernet has been added –
+    usually with name enp0s8
+
+9.  change directory to /etc/sysconfig/network-scripts
+
+10. edit file ifcfg-enp0s8 (if not present then create it)
+
+11. add the following to file – this will give you a local static ip
+    which you can ssh to
+
+\
+\
+
+TYPE="Ethernet"
+
+BOOTPROTO="static"
+
+DEFROUTE="yes"
+
+PEERDNS="yes"
+
+PEERROUTES="yes"
+
+IPV4\_FAILURE\_FATAL="no"
+
+IPV6INIT="yes"
+
+IPV6\_AUTOCONF="yes"
+
+IPV6\_DEFROUTE="yes"
+
+IPV6\_PEERDNS="yes"
+
+IPV6\_PEERROUTES="yes"
+
+IPV6\_FAILURE\_FATAL="no"
+
+NAME="enp0s8"
+
+UUID="41c14649-c4a9-44f2-ac8b-a152b4eb4832" &lt;-generate new UUID and
+replace this
+
+DEVICE="enp0s8"
+
+ONBOOT="yes"
+
+HWADDR="08:00:27:22:8B:1F" &lt;-replace with mac address noted from step
+7
+
+IPADDR="192.168.56.100" &lt;- replace with whatever ip address you want
+
+NETMASK="255.255.255.0" &lt;- replace with appropriate netmask
+
+\
+\
+
+4.  run ifdown enp0s8 and then ifup enp0s8 – this will reset the network
+    interface and if all well then you should be able to ssh in
+
+5.  shutdown the vm and restart in headless mode – this will start the
+    machine up without spawning a terminal window – you can then use the
+    windows linux subsystem terminal (or some other bash shell) to ssh
+    in
+
+\
+\
+
+Setting the hostname {#setting-the-hostname .western lang="zxx"}
+--------------------
+
+\
+\
+
+\
+
+<div id="main-content" dir="LTR">
+
+Change a server's hostname in CentOS {#change-a-servers-hostname-in-centos .western lang="zxx"}
+------------------------------------
+
+-   Last updated on: 2016-06-08
+
+-   Authored by: Rackspace Support
+
+By default, your server is started with the server’s given name as the
+hostname. Some software, such as cPanel, requires a valid Fully
+Qualified Domain Name (FQDN) for the hostname to be used during their
+licensing verification system. This article describes how to change a
+server hostname in CentOS.
+
+### []() Change a server’s hostname {#change-a-servers-hostname .western lang="zxx"}
+
+1.  Using a text editor, open the server’s
+    **/etc/sysconfig/network** file.
+
+    ``` {.western lang="zxx" style="margin-bottom: 0.5cm"}
+     # sudo nano /etc/sysconfig/network
+    ```
+
+2.  Modify the `HOSTNAME=`{.western} value to match your FQDN hostname.
+
+    ``` {.western lang="zxx" style="margin-bottom: 0.5cm"}
+     HOSTNAME=myserver.domain.com
+    ```
+
+3.  For internal networking, change the host that is associated with the
+    main IP address for your server (found at **/etc/hosts**).
+
+    ``` {.western lang="zxx"}
+     127.0.0.1      localhost localhost.localdomain
+
+     123.45.67.89   hostname.domain.com   hostname <-nb this is tab separated
+
+     ~
+
+     ~
+
+     ~
+
+     ~
+
+     -- INSERT --                         2,43-57    ALL
+    ```
+
+4.  Run the `hostname`{.western} command. This command lets you change
+    the hostname on the server that the command line remembers, but it
+    does not actively update all programs that are running under the
+    old hostname.
+
+    ``` {.western lang="zxx"}
+     [root@defiant ~]# hostname hostname.domain.com
+
+     [root@defiant ~]# hostname
+
+     hostname.domain.com
+
+     [root@defiant ~]#
+    ```
+
+5.  Restart networking on your server to ensure that changes will
+    persist on restart.
+
+    ``` {.western lang="zxx" style="margin-bottom: 0.5cm"}
+     # /etc/init.d/network restart
+    ```
+
+</div>
+
+\
+\
+
+\
+\
+
