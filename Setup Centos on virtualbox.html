@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.2  (Win32)">
+	<META NAME="CREATED" CONTENT="20090416;11320264">
+	<META NAME="CHANGEDBY" CONTENT="Richard Hannah">
+	<META NAME="CHANGED" CONTENT="20161015;17204565">
+	<META NAME="Info 1" CONTENT="">
+	<META NAME="Info 2" CONTENT="">
+	<META NAME="Info 3" CONTENT="">
+	<META NAME="Info 4" CONTENT="">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin: 2cm }
+		P { margin-bottom: 0.21cm; so-language: zxx }
+		H1 { margin-bottom: 0.21cm }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt; so-language: zxx }
+		H1.cjk { font-family: "Andale Sans UI"; font-size: 16pt; so-language: zxx }
+		H1.ctl { font-family: "Tahoma"; font-size: 16pt; so-language: zxx }
+		H2 { margin-bottom: 0.21cm }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; so-language: zxx; font-style: italic }
+		H2.cjk { font-family: "Andale Sans UI"; font-size: 14pt; so-language: zxx; font-style: italic }
+		H2.ctl { font-size: 14pt; so-language: zxx; font-style: italic }
+		H3 { margin-bottom: 0.21cm }
+		H3.western { so-language: zxx }
+		H3.cjk { font-family: "MS Gothic"; so-language: zxx }
+		H3.ctl { font-family: "Tahoma"; so-language: zxx }
+		PRE.western { so-language: zxx }
+		PRE.cjk { font-family: "MS PGothic", monospace; so-language: zxx }
+		PRE.ctl { so-language: zxx }
+		A:link { so-language: zxx }
+		CODE.cjk { font-family: "MS PGothic", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="de-DE" DIR="LTR">
+<H1 LANG="zxx" CLASS="western">Setting up centos on virtualbox</H1>
+<P LANG="zxx"><BR><BR>
+</P>
+<P LANG="zxx">Prerequisites &ndash; install virtualbox</P>
+<OL>
+	<LI><P LANG="zxx">Download minimal ISO from
+	<A HREF="https://www.centos.org/download/">https://www.centos.org/download/</A></P>
+	<LI><P LANG="zxx">Create new VM on virtualbox &ndash; use redhat
+	template &ndash; default options and 20GB diskspace are fine</P>
+	<LI><P LANG="zxx">Start vm and select downloaded centos ISO as boot
+	media &ndash; install centos</P>
+</OL>
+<UL>
+	<LI><P LANG="zxx">Installation destination &ndash; just select the
+	harddisk and ensure automatically configure partitioning is selected</P>
+	<LI><P LANG="zxx">Network and hostname &ndash; ensure ethernet is
+	switched on (usually enp0s3)</P>
+	<LI><P LANG="zxx">set root and user passwords (make user
+	administrator)</P>
+</UL>
+<P LANG="zxx"><BR><BR>
+</P>
+<OL START=4>
+	<LI><P LANG="zxx">login as user</P>
+	<LI><P LANG="zxx">run visudo &ndash; find the lines where it says</P>
+	<P LANG="zxx">Allows people in group wheel to run all commands &ndash;
+	ensure uncommented. Optional &ndash; also uncomment the line below &ndash;
+	where it says &quot;Same thing without a password&quot;. This will
+	allow sudo command to run without needing a password.</P>
+	<LI><P LANG="zxx">Shutdown vm and go to settings-&gt;network</P>
+	<LI><P LANG="zxx">enable adapter 2 and select host-only adapter &ndash;
+	expand advanced and take note of mac address &ndash; restart vm</P>
+	<LI><P LANG="zxx">login and run ip addr &ndash; note that a second
+	ethernet has been added &ndash; usually with name enp0s8</P>
+	<LI><P LANG="zxx">change directory to /etc/sysconfig/network-scripts</P>
+	<LI><P LANG="zxx">edit file ifcfg-enp0s8 (if not present then create
+	it)</P>
+	<LI><P LANG="zxx">add the following to file &ndash; this will give
+	you a local static ip which you can ssh to</P>
+</OL>
+<P LANG="zxx"><BR><BR>
+</P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>TYPE=&quot;Ethernet&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>BOOTPROTO=&quot;static&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>DEFROUTE=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>PEERDNS=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>PEERROUTES=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV4_FAILURE_FATAL=&quot;no&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV6INIT=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV6_AUTOCONF=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV6_DEFROUTE=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV6_PEERDNS=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV6_PEERROUTES=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPV6_FAILURE_FATAL=&quot;no&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>NAME=&quot;enp0s8&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>UUID=&quot;41c14649-c4a9-44f2-ac8b-a152b4eb4832&quot;
+<FONT COLOR="#c5000b">&lt;-generate new UUID and replace this</FONT></FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>DEVICE=&quot;enp0s8&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>ONBOOT=&quot;yes&quot;</FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>HWADDR=&quot;08:00:27:22:8B:1F&quot;
+<FONT COLOR="#c5000b">&lt;-replace with mac address noted from step 7</FONT></FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>IPADDR=&quot;192.168.56.100&quot;
+<FONT COLOR="#c5000b">&lt;- replace with whatever ip address you want</FONT></FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><FONT FACE="Consolas, monospace"><FONT SIZE=2>NETMASK=&quot;255.255.255.0&quot;
+<FONT COLOR="#c5000b">&lt;- replace with appropriate netmask</FONT></FONT></FONT></P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><BR><BR>
+</P>
+<OL START=4>
+	<LI><P LANG="zxx" STYLE="margin-bottom: 0.1cm"><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>run
+	ifdown enp0s8 and then ifup enp0s8 &ndash; this will reset the
+	network interface and if all well then you should be able to ssh in</FONT></FONT></FONT></P>
+	<LI><P LANG="zxx" STYLE="margin-bottom: 0.1cm"><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>shutdown
+	the vm and restart in headless mode &ndash; this will start the
+	machine up without spawning a terminal window &ndash; you can then
+	use the windows linux subsystem terminal (or some other bash shell)
+	to ssh in</FONT></FONT></FONT></P>
+</OL>
+<P LANG="zxx" STYLE="margin-left: 1.25cm; margin-bottom: 0.1cm"><BR><BR>
+</P>
+<H2 LANG="zxx" CLASS="western">Setting the hostname</H2>
+<P LANG="zxx"><BR><BR>
+</P>
+<OL>
+	<P LANG="zxx">Follow this guide from
+	<A HREF="https://support.rackspace.com/how-to/centos-hostname-change/">https://support.rackspace.com/how-to/centos-hostname-change/</A></P>
+</OL>
+<P LANG="zxx" STYLE="margin-bottom: 0cm"><BR>
+</P>
+<DIV ID="main-content" DIR="LTR">
+	<H2 LANG="zxx" CLASS="western">Change a server's hostname in CentOS</H2>
+	<UL>
+		<LI><P LANG="zxx" STYLE="margin-bottom: 0cm">Last updated on:
+		2016-06-08 
+		</P>
+		<LI><P LANG="zxx">Authored by: Rackspace Support 
+		</P>
+	</UL>
+	<P LANG="zxx">By default, your server is started with the server&rsquo;s
+	given name as the hostname. Some software, such as cPanel, requires
+	a valid Fully Qualified Domain Name (FQDN) for the hostname to be
+	used during their licensing verification system. This article
+	describes how to change a server hostname in CentOS.</P>
+	<H3 LANG="zxx" CLASS="western"><A NAME="change-a-servers-hostname"></A>
+	Change a server&rsquo;s hostname</H3>
+	<OL>
+		<LI><P LANG="zxx">Using a text editor, open the server&rsquo;s
+		<STRONG>/etc/sysconfig/network</STRONG> file.</P>
+		<PRE LANG="zxx" CLASS="western" STYLE="margin-bottom: 0.5cm"><CODE CLASS="western"> </CODE><CODE CLASS="western"># sudo nano /etc/sysconfig/network</CODE></PRE>
+		<LI><P LANG="zxx">Modify the <CODE CLASS="western">HOSTNAME=</CODE>
+		value to match your FQDN hostname.</P>
+		<PRE LANG="zxx" CLASS="western" STYLE="margin-bottom: 0.5cm"><CODE CLASS="western"> </CODE><CODE CLASS="western">HOSTNAME=myserver.domain.com</CODE></PRE>
+		<LI><P LANG="zxx">For internal networking, change the host that is
+		associated with the main IP address for your server (found at
+		<STRONG>/etc/hosts</STRONG>).</P>
+		<PRE LANG="zxx" CLASS="western"><CODE CLASS="western"> </CODE><CODE CLASS="western">127.0.0.1      localhost localhost.localdomain</CODE>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">123.45.67.89   hostname.domain.com   hostname </CODE><CODE CLASS="western"><FONT COLOR="#c5000b">&lt;-nb this is tab separated</FONT></CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">~</CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">~</CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">~</CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">~</CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">-- INSERT --                         2,43-57    ALL</CODE></SPAN></PRE>
+		<LI><P LANG="zxx">Run the <CODE CLASS="western">hostname</CODE>
+		command. This command lets you change the hostname on the server
+		that the command line remembers, but it does not actively update
+		all programs that are running under the old hostname.</P>
+		<PRE LANG="zxx" CLASS="western"><CODE CLASS="western"> </CODE><CODE CLASS="western">[root@defiant ~]# hostname hostname.domain.com</CODE>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">[root@defiant ~]# hostname</CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">hostname.domain.com</CODE></SPAN>
+
+<CODE CLASS="western"> </CODE><SPAN LANG="zxx"><CODE CLASS="western">[root@defiant ~]#</CODE></SPAN></PRE>
+		<LI><P LANG="zxx">Restart networking on your server to ensure that
+		changes will persist on restart.</P>
+		<PRE LANG="zxx" CLASS="western" STYLE="margin-bottom: 0.5cm"><CODE CLASS="western"> </CODE><CODE CLASS="western"># /etc/init.d/network restart</CODE></PRE>
+	</OL>
+</DIV>
+<P LANG="zxx"><BR><BR>
+</P>
+<P LANG="zxx" STYLE="margin-left: 2.49cm; margin-bottom: 0.1cm"><BR><BR>
+</P>
+</BODY>
+</HTML>
